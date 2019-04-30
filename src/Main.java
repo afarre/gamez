@@ -1,6 +1,7 @@
 import Controller.Controller;
 import Model.APIData;
 import Model.JsonManager;
+import Network.HttpClient;
 import View.ChatView;
 import com.google.gson.Gson;
 
@@ -10,31 +11,25 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class Main {
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
 
-                APIData apiData = null;
+        try {
 
-                try {
-                    File configFile = new File("data/API.json");
-                    apiData = new Gson().fromJson(new FileReader(configFile), APIData.class);
+            File configFile = new File("data/API.json");
+            APIData apiData = new Gson().fromJson(new FileReader(configFile), APIData.class);
+            HttpClient httpClient = HttpClient.getInstance(apiData);
 
-                    if (apiData != null){
-                        System.out.println(apiData.getApiKey());
-                        System.out.println(apiData.getParam1());
-                        System.out.println(apiData.getParam2());
+            SwingUtilities.invokeLater(() -> {
+                ChatView chatView = new ChatView();
+                Controller chatController = new Controller(chatView, new JsonManager(), httpClient);
+                chatView.registerListeners(chatController);
+            });
 
-                        ChatView chatView = new ChatView();
-                        Controller chatController = new Controller(chatView, new JsonManager());
-                        chatView.registerListeners(chatController);
-                    }
-                } catch (FileNotFoundException e) {
-                    System.err.println("El fichero \"config.json\" no ha sido encontrado.");
-                }
+        } catch(FileNotFoundException e) {
+            System.err.println("El fichero \"config.json\" no ha sido encontrado.");
+        }
 
-            }
-        });
     }
+
 }
