@@ -3,6 +3,7 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class ChatView extends JFrame {
@@ -64,16 +65,23 @@ public class ChatView extends JFrame {
     }
 
     public void updateCenter(String msg, boolean botMsg){
+        System.out.println(msg);
         JLabel msgLabel = new JLabel(msg);
+        msgLabel.setOpaque(true);
+        msgLabel.setBackground(Color.GREEN);
+        System.out.println("size: " + msgLabel.getWidth());
+
         if (botMsg){
-            msgLabel.setHorizontalAlignment(JLabel.LEFT);
-            msgLabel.setVerticalAlignment(JLabel.TOP);
+           // msgLabel.setHorizontalAlignment(JLabel.LEFT);
+          //  msgLabel.setVerticalAlignment(JLabel.TOP);
         }else {
-            msgLabel.setHorizontalAlignment(JLabel.RIGHT);
-            msgLabel.setVerticalAlignment(JLabel.TOP);
+         //   msgLabel.setHorizontalAlignment(JLabel.RIGHT);
+          //  msgLabel.setVerticalAlignment(JLabel.TOP);
             msgLabel.setForeground(Color.BLUE);
         }
+
         messages.add(msgLabel);
+        System.out.println("parent: " + messages.getWidth());
         center.add(scrollPane, BorderLayout.CENTER);
         principal.add(center);
         setContentPane(principal);

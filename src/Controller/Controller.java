@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.APIData;
 import Model.JsonManager;
 import Model.UserInfo;
 import Network.HttpClient;
@@ -7,7 +8,9 @@ import Util.BotResponse;
 import Util.UserException;
 import View.ChatView;
 import com.google.gson.Gson;
+import sun.nio.cs.US_ASCII;
 
+import javax.jws.soap.SOAPBinding;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.EOFException;
@@ -32,10 +35,19 @@ public class Controller implements ActionListener {
         }
 
         if (userInfo == null){
-            chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!<br/>I see you are new here. Why don't you tell me a bit about yourself?<br/><html>", true);
+            chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!" +
+                    "<br/>I see you are new here. Why don't you tell me a bit about yourself?<br/><html>", true);
             //chatView.updateCenter("Hello and welcome to Gamez, your gaming chatbot!\nI see you are new here. Why don't you tell me a bit about yourself?\n", true);
         }else {
-            chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!<br/>It's nice to have you back " + userInfo.getName() + "! How have you been?<br/><html>", true);
+            chatView.updateCenter("<html>" +
+                    "<div align=\"left\">" +
+                    " Some Random text to be left aligned " +
+                    "  </div>" +
+                    "<div align=\"right\">" +
+                    " Some Random text to be right aligned " +
+                    "  </div>" +
+                    "</html>", false);
+            //chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!<br/>It's nice to have you back " + userInfo.getName() + "! How have you been?<br/><html>", true);
             //chatView.updateCenter("Hello and welcome to Gamez, your gaming chatbot!\nIt's nice to have you back " + userInfo.getName() + "! How have you been?", true);
         }
 
