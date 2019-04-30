@@ -1,19 +1,14 @@
 package Controller;
 
-import Model.APIData;
 import Model.JsonManager;
 import Model.UserInfo;
 import Network.HttpClient;
 import Util.BotResponse;
-import Util.UserException;
 import View.ChatView;
 import com.google.gson.Gson;
-import sun.nio.cs.US_ASCII;
 
-import javax.jws.soap.SOAPBinding;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
