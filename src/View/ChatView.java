@@ -61,6 +61,8 @@ public class ChatView extends JFrame {
 
         center.add(scrollPane, BorderLayout.CENTER);
         principal.add(center);
+
+
     }
 
     public void updateCenter(String msg, boolean botMsg){
@@ -77,6 +79,10 @@ public class ChatView extends JFrame {
         center.add(scrollPane, BorderLayout.CENTER);
         principal.add(center);
         setContentPane(principal);
+
+        JScrollBar vertical = scrollPane.getVerticalScrollBar();
+        vertical.setValue( vertical.getMaximum() );
+
     }
 
     private void generateCenter2() {
@@ -138,4 +144,5 @@ public class ChatView extends JFrame {
     public void registerListeners(ActionListener chatController) {
         sendButton.addActionListener(chatController);
     }
+
 }
