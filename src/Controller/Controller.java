@@ -2,7 +2,7 @@ package Controller;
 
 import Model.JsonManager;
 import Model.UserInfo;
-import Network.HttpClient;
+import Network.ChatBotClient;
 import Util.BotResponse;
 import View.ChatView;
 import com.google.gson.Gson;
@@ -17,11 +17,11 @@ public class Controller implements ActionListener {
 
     private ChatView chatView;
     private UserInfo userInfo;
-    private HttpClient httpClient;
+    private ChatBotClient chatBotClient;
 
-    public Controller(ChatView chatView, JsonManager jsonManager, HttpClient httpClient) {
+    public Controller(ChatView chatView, JsonManager jsonManager, ChatBotClient chatBotClient) {
         this.chatView = chatView;
-        this.httpClient = httpClient;
+        this.chatBotClient = chatBotClient;
         try {
             File configFile = new File("data/userInfo.json");
             userInfo = new Gson().fromJson(new FileReader(configFile), UserInfo.class);
@@ -47,7 +47,7 @@ public class Controller implements ActionListener {
         }
 
         try {
-            httpClient.initConversation();
+            chatBotClient.initConversation();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -64,7 +64,7 @@ public class Controller implements ActionListener {
     private void botEngineAnswer(String msg) {
 
         try {
-            BotResponse response = new BotResponse(httpClient.sendMsg(msg));
+            BotResponse response = new BotResponse(chatBotClient.sendMsg(msg));
             chatView.updateCenter(response.getBotFulfilment(), true);
         } catch(Exception e) {
             e.printStackTrace();

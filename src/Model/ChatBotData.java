@@ -1,6 +1,6 @@
 package Model;
 
-public class APIData {
+public class ChatBotData {
 
     private String apiKey;
     private String storyId;
