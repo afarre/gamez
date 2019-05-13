@@ -34,15 +34,16 @@ public class Controller implements ActionListener {
                     "<br/>I see you are new here. Why don't you tell me a bit about yourself?<br/><html>", true);
             //chatView.updateCenter("Hello and welcome to Gamez, your gaming chatbot!\nI see you are new here. Why don't you tell me a bit about yourself?\n", true);
         }else {
+            /*
             chatView.updateCenter("<html>" +
-                    "<div align=\"left\">" +
-                    " Some Random text to be left aligned " +
+                    "<div align=right>" +
+                    " text a la dreta " +
                     "  </div>" +
-                    "<div align=\"right\">" +
+                    "<div align=left>" +
                     " Some Random text to be right aligned " +
                     "  </div>" +
-                    "</html>", false);
-            //chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!<br/>It's nice to have you back " + userInfo.getName() + "! How have you been?<br/><html>", true);
+                    "</html>", false);*/
+            chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!<br/>It's nice to have you back " + userInfo.getName() + "! How have you been?<br/><html>", true);
             //chatView.updateCenter("Hello and welcome to Gamez, your gaming chatbot!\nIt's nice to have you back " + userInfo.getName() + "! How have you been?", true);
         }
 
@@ -69,7 +70,11 @@ public class Controller implements ActionListener {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private String beautify(String msg){
+        String[] aux = msg.split("[\n]");
+        return "<html><html>";
     }
 
 }

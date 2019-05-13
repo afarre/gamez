@@ -3,15 +3,13 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class ChatView extends JFrame {
     private JButton sendButton;
     private JTextField textField;
-    private JPanel messages;
     private JScrollPane scrollPane;
-    private JPanel center;
+    private Box center;
     private JPanel principal;
 
 
@@ -56,40 +54,40 @@ public class ChatView extends JFrame {
 
 
     private void generateCenter(){
-        center = new JPanel(new BorderLayout());
-        messages = new JPanel(new GridLayout(0, 1));
-        scrollPane = new JScrollPane(messages, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-        center.add(scrollPane, BorderLayout.CENTER);
-        principal.add(center);
-
-
+        center = Box.createVerticalBox();
+        scrollPane = new JScrollPane(center, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        principal.add(scrollPane, BorderLayout.CENTER);
     }
 
     public void updateCenter(String msg, boolean botMsg){
-        System.out.println(msg);
-        JLabel msgLabel = new JLabel(msg);
-        msgLabel.setOpaque(true);
-        msgLabel.setBackground(Color.GREEN);
-        System.out.println("size: " + msgLabel.getWidth());
+        //JPanel borderedPanel = new JPanel();
+        JLabel msgLabel = new JLabel("<html><body style='width: %1spx'>" + msg + "</hmtl>\n");
+        //Dimension d = new Dimension();
+        //d.setSize(350, 20);
+        //msgLabel.setMaximumSize(d);
+        //msgLabel.setPreferredSize(new Dimension(379,10));
+        //msgLabel.setOpaque(true);
 
         if (botMsg){
-           // msgLabel.setHorizontalAlignment(JLabel.LEFT);
-          //  msgLabel.setVerticalAlignment(JLabel.TOP);
+            //borderedPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+            msgLabel.setHorizontalAlignment(JLabel.LEFT);
+            msgLabel.setVerticalAlignment(JLabel.TOP);
         }else {
-         //   msgLabel.setHorizontalAlignment(JLabel.RIGHT);
-          //  msgLabel.setVerticalAlignment(JLabel.TOP);
+            //borderedPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+            msgLabel.setHorizontalAlignment(JLabel.RIGHT);
+            msgLabel.setVerticalAlignment(JLabel.TOP);
             msgLabel.setForeground(Color.BLUE);
         }
 
-        messages.add(msgLabel);
-        System.out.println("parent: " + messages.getWidth());
-        center.add(scrollPane, BorderLayout.CENTER);
-        principal.add(center);
+        //borderedPanel.add(msgLabel);
+
+        textField.requestFocus();
+        center.add(msgLabel);
+        principal.add(scrollPane, BorderLayout.CENTER);
         setContentPane(principal);
 
         JScrollBar vertical = scrollPane.getVerticalScrollBar();
-        vertical.setValue( vertical.getMaximum() );
+        vertical.setValue(vertical.getMaximum() );
 
     }
 
@@ -151,6 +149,7 @@ public class ChatView extends JFrame {
 
     public void registerListeners(ActionListener chatController) {
         sendButton.addActionListener(chatController);
+        textField.addActionListener(chatController);
     }
 
 }
