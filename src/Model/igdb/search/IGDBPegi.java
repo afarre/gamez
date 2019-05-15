@@ -1,5 +1,7 @@
 package Model.igdb.search;
 
+import java.util.ArrayList;
+
 public enum IGDBPegi {
 
     PEGI3(1, 3),
@@ -24,13 +26,13 @@ public enum IGDBPegi {
         return minAge;
     }
 
-    public static IGDBPegi getPegiFromAge(int age) {
+    public static ArrayList<String> getPegiFromAge(int age) {
 
-        IGDBPegi agePegi = null;
+        ArrayList<String> agePegi = new ArrayList<>();
 
         for(IGDBPegi pegi : IGDBPegi.values()) {
-            if(pegi.getMinAge() <= age && (agePegi == null || agePegi.getMinAge() < pegi.getMinAge())) {
-                agePegi = pegi;
+            if(pegi.getMinAge() <= age) {
+                agePegi.add(String.valueOf(pegi.getValue()));
             }
         }
 

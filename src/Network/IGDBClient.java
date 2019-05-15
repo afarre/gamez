@@ -21,11 +21,11 @@ public class IGDBClient extends HttpClient {
     private final static String FILTER_PARAM = "filter";
     private final static String ORDER_PARAM = "order";
     private final static String LIMIT_PARAM = "limit";
+    private final static String SEARCH_PARAM = "search";
 
     private final static String BEGIN_OP = "prefix";
     private final static String IN_ARRAY_OR_OP = "any";
     private final static String GREATER_E_OP = "gte";
-    private final static String EQUAL_OP = "eq";
 
     private final static String POPULAR_DESC = "popularity:desc";
 
@@ -33,6 +33,8 @@ public class IGDBClient extends HttpClient {
     private final static int GAME_MODE_OPTION = 1;
     private final static int GENRE_OPTION = 2;
     private final static int PLATFORM_OPTION = 3;
+    private final static int PEGI_OPTION = 4;
+    private final static int KEYWORD_OPTION = 5;
 
     //Instance
     private static IGDBClient igdbClient;
@@ -133,7 +135,7 @@ public class IGDBClient extends HttpClient {
 
         //Check name
         if(filter.getName() != null) {
-            sb.append(getFilterParam(fields.getName(), BEGIN_OP, filter.getName()));
+            sb.append(SEARCH_PARAM).append("=").append(filter.getName());
         }
 
         //Check rating
@@ -150,6 +152,24 @@ public class IGDBClient extends HttpClient {
                 sb.append("&");
             }
             sb.append(getFilterParam(fields.getTime(), GREATER_E_OP, String.valueOf(filter.getTime())));
+        }
+
+
+        //Check age
+        String pegi = getArrayFilter(IGDBPegi.getPegiFromAge(filter.getAge()), PEGI_OPTION);
+        if(pegi.length() > 0) {
+            sb.append(getFilterParam(fields.getPegi(), IN_ARRAY_OR_OP, pegi));
+        }
+
+        //Check max games
+        if(sb.length() > 0) {
+            sb.append("&");
+        }
+        sb.append(LIMIT_PARAM).append("=");
+        if(filter.getMaxGames() > 0) {
+            sb.append(filter.getMaxGames());
+        } else {
+            sb.append(MAX_GAMES);
         }
 
         //Check cameras
@@ -188,24 +208,13 @@ public class IGDBClient extends HttpClient {
             sb.append(getFilterParam(fields.getPlatforms(), IN_ARRAY_OR_OP, platforms));
         }
 
-        //Check age
-        IGDBPegi pegi = IGDBPegi.getPegiFromAge(filter.getAge());
-        if(pegi != null) {
+        //Check keywords
+        String keywords = getArrayFilter(filter.getKeywords(), KEYWORD_OPTION);
+        if(keywords.length() > 0) {
             if(sb.length() > 0) {
                 sb.append("&");
             }
-            sb.append(getFilterParam(fields.getPegi(), EQUAL_OP, String.valueOf(pegi.getMinAge())));
-        }
-
-        //Check max games
-        if(sb.length() > 0) {
-            sb.append("&");
-        }
-        sb.append(LIMIT_PARAM).append("=");
-        if(filter.getMaxGames() > 0) {
-            sb.append(filter.getMaxGames());
-        } else {
-            sb.append(MAX_GAMES);
+            sb.append(getFilterParam(fields.getKeywords(), IN_ARRAY_OR_OP, keywords));
         }
 
         return sb.toString();
@@ -233,6 +242,12 @@ public class IGDBClient extends HttpClient {
                 case PLATFORM_OPTION:
                     id = getPlatformId(element);
                     break;
+                case PEGI_OPTION:
+                    id = Long.valueOf(element);
+                    break;
+                case KEYWORD_OPTION:
+                    id = getKeywordId(element);
+                    break;
             }
 
             //Check if is a valid id
@@ -247,6 +262,10 @@ public class IGDBClient extends HttpClient {
 
         return params.toString();
 
+    }
+
+    private long getKeywordId(String keyword) throws Exception {
+        return getFieldId(keyword, igdbData.getKeyword());
     }
 
     private long getPlatformId(String platformName) throws Exception {

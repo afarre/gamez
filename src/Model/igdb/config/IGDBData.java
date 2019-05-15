@@ -9,6 +9,7 @@ public class IGDBData {
     private IGDBField genre;
     private IGDBField camera;
     private IGDBField gameMode;
+    private IGDBField keyword;
 
     public String getApiKey() {
         return apiKey;
@@ -36,6 +37,10 @@ public class IGDBData {
 
     public IGDBField getGameMode() {
         return gameMode;
+    }
+
+    public IGDBField getKeyword() {
+        return keyword;
     }
 
 }

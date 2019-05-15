@@ -4,7 +4,6 @@ public class IGDBFieldData {
 
     private String id;
     private String name;
-    private String games;
 
     public String getId() {
         return id;
@@ -12,10 +11,6 @@ public class IGDBFieldData {
 
     public String getName() {
         return name;
-    }
-
-    public String getGames() {
-        return games;
     }
 
 }
