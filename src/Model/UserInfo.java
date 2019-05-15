@@ -64,4 +64,5 @@ public class UserInfo {
             favGames.add(favGame);
         }
     }
+
 }

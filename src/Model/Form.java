@@ -5,7 +5,7 @@ public class Form {
     private String genre;
     private String camera;
     private int numPlayers;
-    private int rating;
+    private double rating;
     private int numRecommendations;
 
     public Form(){ }
@@ -42,11 +42,11 @@ public class Form {
         this.numPlayers = numPlayers;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 

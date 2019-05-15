@@ -14,9 +14,7 @@ public class BotResponse {
 
     private Form form;
 
-    public BotResponse() {
-    }
-
+    public BotResponse() {}
 
     public ArrayList<String> getBotFulfilment(JSONObject msg) throws JSONException {
 
@@ -65,7 +63,7 @@ public class BotResponse {
                 form.setNumPlayers(Integer.parseInt(fields[1]));
                 break;
             case 4:
-                form.setRating(Integer.parseInt(fields[1]));
+                form.setRating(Double.parseDouble(fields[1]));
                 break;
             case 5:
                 form.setNumRecommendations(Integer.parseInt(fields[1]));

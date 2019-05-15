@@ -17,11 +17,11 @@ public abstract class HttpClient {
         return code != 400 && code != 401 && code != 404 && code != 500;
     }
 
-    public JSONObject preparePostData(HashMap<String, Object> params) throws JSONException {
+    public JSONObject preparePostData(HashMap<String, String> params) throws JSONException {
 
         //Set JSON data
         JSONObject data = new JSONObject();
-        for(HashMap.Entry<String, Object> entry : params.entrySet()) {
+        for(HashMap.Entry<String, String> entry : params.entrySet()) {
             data.put(entry.getKey(), entry.getValue());
         }
 

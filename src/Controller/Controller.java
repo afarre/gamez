@@ -1,7 +1,8 @@
 package Controller;
 
+import Model.chatbot.Trigger;
+import Network.IGDBClient;
 import View.ChatView;
-import Model.JsonManager;
 import Model.UserInfo;
 import Network.ChatBotClient;
 import Util.BotResponse;
@@ -15,41 +16,26 @@ import java.awt.event.WindowEvent;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Controller implements ActionListener {
 
     private ChatView chatView;
-    private UserInfo userInfo;
     private ChatBotClient chatBotClient;
+    private IGDBClient igdbClient;
+    private UserInfo userInfo;
     private BotResponse response;
 
-    public Controller(ChatView chatView, JsonManager jsonManager, ChatBotClient chatBotClient, UserInfo userInfo) {
+    public Controller(ChatView chatView, ChatBotClient chatBotClient, IGDBClient igdbClient, UserInfo userInfo) {
 
+        //Get data
         this.chatView = chatView;
         this.chatBotClient = chatBotClient;
+        this.igdbClient = igdbClient;
         this.userInfo = userInfo;
         response = new BotResponse();
 
-        if (userInfo.getName().isEmpty()){
-            botEngineAnswer("Not exists");
-            //chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!" +
-              //      "<br/>I see you are new here. Why don't you tell me a bit about yourself?<br/><html>", true);
-            //chatView.updateCenter("Hello and welcome to Gamez, your gaming chatbot!\nI see you are new here. Why don't you tell me a bit about yourself?\n", true);
-        } else {
-            /*
-            chatView.updateCenter("<html>" +
-                    "<div align=right>" +
-                    " text a la dreta " +
-                    "  </div>" +
-                    "<div align=left>" +
-                    " Some Random text to be right aligned " +
-                    "  </div>" +
-                    "</html>", false);*/
-            botEngineAnswer("Exists");
-            chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!<br/>It's nice to have you back " + userInfo.getName() + ".<br/>How have you been?<br/><html>", true);
-            //chatView.updateCenter("Hello and welcome to Gamez, your gaming chatbot!\nIt's nice to have you back " + userInfo.getName() + "! How have you been?", true);
-        }
-
+        //Set window close event
         this.chatView.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent windowEvent) {
@@ -69,31 +55,41 @@ public class Controller implements ActionListener {
 
     }
 
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
         String msg = chatView.getUserMessage();
         chatView.updateCenter(msg, false);
-        botEngineAnswer(msg);
+        getBotAnswer(msg);
     }
 
-    private void botEngineAnswer(String msg) {
-        try {
-            ArrayList<String> messages = response.getBotFulfilment(chatBotClient.sendMsg(msg));
-            for (String answer: messages){
-                System.out.println("[DEBUG] " + answer);
-                chatView.updateCenter(answer,true);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+    public void startChat() throws Exception {
+
+        //Get init message
+        showMessages(response.getBotFulfilment(chatBotClient.initConversation()));
+
+        //Send user status
+        HashMap<String, String> hashMap = new HashMap<>();
+        if(!userInfo.getName().isEmpty()) {
+            hashMap.put("userName", userInfo.getName());
+            showMessages(response.getBotFulfilment(chatBotClient.goToInteraction(Trigger.EXIST_USER.getId(), hashMap)));
+        } else {
+            showMessages(response.getBotFulfilment(chatBotClient.goToInteraction(Trigger.NOT_EXIST_USER.getId(), hashMap)));
         }
 
     }
 
-    private String beautify(String msg){
-        String[] aux = msg.split("[\n]");
-        return "<html><html>";
+    private void getBotAnswer(String msg) {
+        try {
+            showMessages(response.getBotFulfilment(chatBotClient.sendMsg(msg)));
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showMessages(ArrayList<String> msgs) {
+        for(String msg : msgs) {
+            chatView.updateCenter(msg, true);
+        }
     }
 
 }
