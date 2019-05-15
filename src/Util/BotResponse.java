@@ -19,6 +19,7 @@ public class BotResponse {
 
 
     public ArrayList<String> getBotFulfilment(JSONObject msg) throws JSONException {
+
         ArrayList<String> messages = new ArrayList<>();
 
         //Get fulfilment
@@ -26,13 +27,14 @@ public class BotResponse {
 
         //Get text messages
         for(int i = 0; i < responses.length(); i++) {
+
             JSONObject obj = responses.getJSONObject(i);
             messages.add(obj.getString("message"));
 
-            if (obj.getString("message").equals("Alright, let's go for it!") || obj.getString("message").equals("Very well, let's get the questions started!")){
+            if(obj.getString("message").equals("Alright, let's go for it!") || obj.getString("message").equals("Very well, let's get the questions started!")){
                 System.out.println("new form");
                 form = new Form();
-            }else if (obj.getString("message").startsWith("#")){
+            } else if (obj.getString("message").startsWith("#")){
                 parseResponse(obj.getString("message"));
                 int aux = messages.size() - 1;
                 StringBuilder strb = new StringBuilder(messages.get(aux));

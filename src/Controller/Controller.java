@@ -21,7 +21,6 @@ public class Controller implements ActionListener {
     private ChatView chatView;
     private UserInfo userInfo;
     private ChatBotClient chatBotClient;
-    private BotResponse response;
 
     public Controller(ChatView chatView, JsonManager jsonManager, ChatBotClient chatBotClient, UserInfo userInfo) {
 
@@ -29,12 +28,12 @@ public class Controller implements ActionListener {
         this.chatBotClient = chatBotClient;
         this.userInfo = userInfo;
 
-        if (userInfo == null){
+        if (userInfo.getName().isEmpty()){
             botEngineAnswer("Not exists");
             //chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!" +
               //      "<br/>I see you are new here. Why don't you tell me a bit about yourself?<br/><html>", true);
             //chatView.updateCenter("Hello and welcome to Gamez, your gaming chatbot!\nI see you are new here. Why don't you tell me a bit about yourself?\n", true);
-        }else {
+        } else {
             /*
             chatView.updateCenter("<html>" +
                     "<div align=right>" +
@@ -79,6 +78,7 @@ public class Controller implements ActionListener {
 
     private void botEngineAnswer(String msg) {
         try {
+            BotResponse response = new BotResponse();
             ArrayList<String> messages = response.getBotFulfilment(chatBotClient.sendMsg(msg));
             for (String answer: messages){
                 System.out.println("[DEBUG] " + answer);
