@@ -4,7 +4,6 @@ import Model.chatbot.ChatBotData;
 import Model.igdb.config.IGDBData;
 import Model.JsonManager;
 import Model.igdb.search.IGDBGame;
-import Model.igdb.search.IGDBGameFilter;
 import Network.ChatBotClient;
 import Network.IGDBClient;
 import View.ChatView;

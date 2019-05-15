@@ -12,13 +12,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.*;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 
 public class Controller implements ActionListener {
 
     private ChatView chatView;
     private UserInfo userInfo;
     private ChatBotClient chatBotClient;
+    private BotResponse response;
 
     public Controller(ChatView chatView, JsonManager jsonManager, ChatBotClient chatBotClient, UserInfo userInfo) {
 
@@ -27,8 +30,9 @@ public class Controller implements ActionListener {
         this.userInfo = userInfo;
 
         if (userInfo == null){
-            chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!" +
-                    "<br/>I see you are new here. Why don't you tell me a bit about yourself?<br/><html>", true);
+            botEngineAnswer("Not exists");
+            //chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!" +
+              //      "<br/>I see you are new here. Why don't you tell me a bit about yourself?<br/><html>", true);
             //chatView.updateCenter("Hello and welcome to Gamez, your gaming chatbot!\nI see you are new here. Why don't you tell me a bit about yourself?\n", true);
         }else {
             /*
@@ -40,7 +44,8 @@ public class Controller implements ActionListener {
                     " Some Random text to be right aligned " +
                     "  </div>" +
                     "</html>", false);*/
-            chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!<br/>It's nice to have you back " + userInfo.getName() + "! How have you been?<br/><html>", true);
+            botEngineAnswer("Exists");
+            chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!<br/>It's nice to have you back " + userInfo.getName() + ".<br/>How have you been?<br/><html>", true);
             //chatView.updateCenter("Hello and welcome to Gamez, your gaming chatbot!\nIt's nice to have you back " + userInfo.getName() + "! How have you been?", true);
         }
 
@@ -73,10 +78,12 @@ public class Controller implements ActionListener {
     }
 
     private void botEngineAnswer(String msg) {
-
         try {
-            BotResponse response = new BotResponse(chatBotClient.sendMsg(msg));
-            chatView.updateCenter(response.getBotFulfilment(), true);
+            ArrayList<String> messages = response.getBotFulfilment(chatBotClient.sendMsg(msg));
+            for (String answer: messages){
+                System.out.println("[DEBUG] " + answer);
+                chatView.updateCenter(answer,true);
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }
