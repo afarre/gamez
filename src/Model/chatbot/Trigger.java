@@ -1,4 +1,4 @@
-package Model;
+package Model.chatbot;
 
 public enum Trigger {
 

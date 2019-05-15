@@ -5,16 +5,15 @@
     "url": "games/",
     "fields": {
       "id": "id",
-      "name": "slug",
+      "name": "name",
       "rating": "total_rating",
       "description": "summary",
-      "time": "time_to_beat.normally",
       "cameras": "player_perspectives",
       "gameModes": "game_modes",
       "keywords": "keywords",
       "genres": "genres",
       "platforms": "platforms",
-      "pegi": "pegi",
+      "pegi": "age_ratings",
       "related": "games"
     }
   },
@@ -22,35 +21,35 @@
     "url": "platforms/",
     "fields": {
       "id": "id",
-      "name": "slug"
+      "name": "name"
     }
   },
   "genre": {
     "url": "genres/",
     "fields": {
       "id": "id",
-      "name": "slug"
+      "name": "name"
     }
   },
   "camera": {
     "url": "player_perspectives/",
     "fields": {
       "id": "id",
-      "name": "slug"
+      "name": "name"
     }
   },
   "gameMode": {
     "url": "game_modes/",
     "fields": {
       "id": "id",
-      "name": "slug"
+      "name": "name"
     }
   },
   "keyword": {
     "url": "keywords/",
     "fields": {
       "id": "id",
-      "name": "slug"
+      "name": "name"
     }
   }
 }

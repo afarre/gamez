@@ -1,20 +1,21 @@
 package Model;
 
-import com.google.gson.JsonObject;
+import Model.igdb.search.IGDBGame;
 
 import java.util.ArrayList;
 
 public class UserInfo {
-    private String name;
-    private ArrayList<JsonObject> consoles;
-    private ArrayList<JsonObject> favGenres;
-    private ArrayList<JsonObject> favGames;
 
-    public UserInfo(String name, ArrayList<JsonObject> consoles, ArrayList<JsonObject> favGames, ArrayList<JsonObject> favGenres){
-        this.name = name;
-        this.consoles = consoles;
-        this.favGames = favGames;
-        this.favGenres = favGenres;
+    private String name;
+    private int age;
+    private ArrayList<String> consoles;
+    private ArrayList<String> favGenres;
+    private ArrayList<IGDBGame> favGames;
+
+    public UserInfo(){
+        consoles = new ArrayList<>();
+        favGenres = new ArrayList<>();
+        favGames = new ArrayList<>();
     }
 
     public String getName() {
@@ -25,27 +26,41 @@ public class UserInfo {
         this.name = name;
     }
 
-    public ArrayList<JsonObject> getConsoles() {
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public ArrayList<String> getConsoles() {
         return consoles;
     }
 
-    public void setConsoles(ArrayList<JsonObject> consoles) {
-        this.consoles = consoles;
+    public void addConsole(String console) {
+        if(!consoles.contains(console)) {
+            consoles.add(console);
+        }
     }
 
-    public ArrayList<JsonObject> getFavGenres() {
+    public ArrayList<String> getFavGenres() {
         return favGenres;
     }
 
-    public void setFavGenres(ArrayList<JsonObject> favGenres) {
-        this.favGenres = favGenres;
+    public void addFavGenre(String favGenre) {
+        if(!favGenres.contains(favGenre)) {
+            favGenres.add(favGenre);
+        }
     }
 
-    public ArrayList<JsonObject> getFavGames() {
+    public ArrayList<IGDBGame> getFavGames() {
         return favGames;
     }
 
-    public void setFavGames(ArrayList<JsonObject> favGames) {
-        this.favGames = favGames;
+    public void addFavGames(IGDBGame favGame) {
+        if(!favGames.contains(favGame)) {
+            favGames.add(favGame);
+        }
     }
 }

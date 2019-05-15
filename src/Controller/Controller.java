@@ -23,7 +23,7 @@ public class Controller implements ActionListener {
         this.chatView = chatView;
         this.chatBotClient = chatBotClient;
         try {
-            File configFile = new File("data/userInfo.json");
+            File configFile = new File("data/user.json");
             userInfo = new Gson().fromJson(new FileReader(configFile), UserInfo.class);
         } catch (FileNotFoundException e) {
             System.out.println("There was an error reading the user personal data.");

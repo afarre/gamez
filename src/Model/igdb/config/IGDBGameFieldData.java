@@ -6,7 +6,6 @@ public class IGDBGameFieldData {
     private String name;
     private String rating;
     private String description;
-    private String time;
     private String cameras;
     private String gameModes;
     private String keywords;
@@ -29,10 +28,6 @@ public class IGDBGameFieldData {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getTime() {
-        return time;
     }
 
     public String getCameras() {

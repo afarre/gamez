@@ -3,7 +3,7 @@ package Network;
 import Model.igdb.config.*;
 import Model.igdb.search.IGDBFieldSearch;
 import Model.igdb.search.IGDBGameFilter;
-import Model.igdb.search.IGDBGameSearch;
+import Model.igdb.search.IGDBGame;
 import Model.igdb.search.IGDBPegi;
 import Util.UserException;
 import org.json.JSONArray;
@@ -57,12 +57,7 @@ public class IGDBClient extends HttpClient {
         return igdbClient;
     }
 
-    private void setBasicHeaders(HttpsURLConnection con) {
-        con.setRequestProperty("user-key", igdbData.getApiKey());
-        con.setRequestProperty("accept", "application/json");
-    }
-
-    public ArrayList<IGDBGameSearch> getGameFromFilter(IGDBGameFilter filter) throws Exception {
+    public ArrayList<IGDBGame> getRelatedGames(long gameId, int limit) throws Exception {
 
         //Get game field
         IGDBGameField gameField = igdbData.getGame();
@@ -74,16 +69,16 @@ public class IGDBClient extends HttpClient {
         //Get fields
         IGDBGameFieldData fieldsData = gameField.getFields();
         ArrayList<String> fields = new ArrayList<>();
-        fields.add(fieldsData.getId());
-        fields.add(fieldsData.getName());
-        fields.add(fieldsData.getDescription());
         fields.add(fieldsData.getRelated());
 
         //Add GET params
+        sb.append(gameId);
         sb.append("?").append(getFieldsParam(fields));
-        String filterParams = getParamsFromFilter(filter, fieldsData);
-        if(filterParams.length() == 0) {
-            sb.append("&").append(filterParams);
+        sb.append("?").append(LIMIT_PARAM).append("=");
+        if(limit > 0) {
+            sb.append(limit);
+        } else {
+            sb.append(MAX_GAMES);
         }
         sb.append("&").append(ORDER_PARAM).append("=").append(POPULAR_DESC);
 
@@ -103,29 +98,153 @@ public class IGDBClient extends HttpClient {
         }
 
         //Get JSON response
-        ArrayList<IGDBGameSearch> searches = new ArrayList<>();
         JSONArray response = getJSONArrayResponse(con);
+        ArrayList<IGDBGame> games = new ArrayList<>();
+        if(response.length() > 0) {
+            JSONArray relatedGameIds = response.getJSONObject(0).getJSONArray(fieldsData.getRelated());
+            for(int i = 0; i < relatedGameIds.length(); i++) {
+                IGDBGame game = getGameFromId(relatedGameIds.getLong(i));
+                if(game != null) {
+                    games.add(game);
+                }
+            }
+        }
+
+        return games;
+
+    }
+
+    private IGDBGame getGameFromId(long gameId) throws Exception {
+
+        //Get game field
+        IGDBGameField gameField = igdbData.getGame();
+
+        //Get url
+        StringBuilder sb = new StringBuilder(igdbData.getBaseUrl());
+        sb.append(gameField.getUrl());
+
+        //Get fields
+        IGDBGameFieldData fieldsData = gameField.getFields();
+        ArrayList<String> fields = new ArrayList<>();
+        fields.add(fieldsData.getId());
+        fields.add(fieldsData.getName());
+        fields.add(fieldsData.getDescription());
+        fields.add(fieldsData.getRating());
+        fields.add(fieldsData.getGenres());
+        fields.add(fieldsData.getPlatforms());
+
+        //Add GET params
+        sb.append(gameId);
+        sb.append("?").append(getFieldsParam(fields));
+
+        //Create HTTP connection
+        URL url = new URL(sb.toString());
+        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+        //Set GET request
+        con.setRequestMethod("GET");
+
+        //Set headers
+        setBasicHeaders(con);
+
+        //Get GET response
+        if(!validateResponseCode(con.getResponseCode())) {
+            throw new UserException("Invalid Response");
+        }
+
+        //Get JSON response
+        JSONArray response = getJSONArrayResponse(con);
+        if(response.length() > 0) {
+            return getGamesFromResponse(response, fieldsData).get(0);
+        }
+
+        return null;
+
+    }
+
+    public ArrayList<IGDBGame> getGamesFromFilter(IGDBGameFilter filter) throws Exception {
+
+        //Get game field
+        IGDBGameField gameField = igdbData.getGame();
+
+        //Get url
+        StringBuilder sb = new StringBuilder(igdbData.getBaseUrl());
+        sb.append(gameField.getUrl());
+
+        //Get fields
+        IGDBGameFieldData fieldsData = gameField.getFields();
+        ArrayList<String> fields = new ArrayList<>();
+        fields.add(fieldsData.getId());
+        fields.add(fieldsData.getName());
+        fields.add(fieldsData.getDescription());
+        fields.add(fieldsData.getPegi());
+        fields.add(fieldsData.getRating());
+        fields.add(fieldsData.getGenres());
+        fields.add(fieldsData.getPlatforms());
+
+        //Add GET params
+        sb.append("?").append(getFieldsParam(fields));
+        String filterParams = getParamsFromFilter(filter, fieldsData);
+        if(filterParams.length() > 0) {
+            sb.append("&").append(filterParams);
+        }
+
+        //Create HTTP connection
+        URL url = new URL(sb.toString());
+        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+        //Set GET request
+        con.setRequestMethod("GET");
+
+        //Set headers
+        setBasicHeaders(con);
+
+        //Get GET response
+        if(!validateResponseCode(con.getResponseCode())) {
+            throw new UserException("Invalid Response");
+        }
+
+        //Get JSON response
+        JSONArray response = getJSONArrayResponse(con);
+        return getGamesFromResponse(response, fieldsData);
+
+    }
+
+    private ArrayList<IGDBGame> getGamesFromResponse(JSONArray response, IGDBGameFieldData fieldsData) {
+
+        ArrayList<IGDBGame> games = new ArrayList<>();
         for(int i = 0; i < response.length(); i++) {
 
-            //Prepare struct
-            JSONObject responseFrag = response.getJSONObject(i);
-            IGDBGameSearch search = new IGDBGameSearch();
+            try {
 
-            //Add params
-            search.setId(responseFrag.getLong(fieldsData.getId()));
-            search.setName(responseFrag.getString(fieldsData.getName()));
-            search.setDescription(responseFrag.getString(fieldsData.getDescription()));
-            JSONArray relatedGames = responseFrag.getJSONArray(fieldsData.getRelated());
-            for(int j = 0; j < relatedGames.length(); j++) {
-                search.addRelatedGame(relatedGames.getLong(j));
-            }
+                //Prepare struct
+                JSONObject responseFrag = response.getJSONObject(i);
+                IGDBGame search = new IGDBGame();
 
-            //Add search result
-            searches.add(search);
+                //Add params
+                search.setId(responseFrag.getLong(fieldsData.getId()));
+                search.setName(responseFrag.getString(fieldsData.getName()));
+                search.setDescription(responseFrag.getString(fieldsData.getDescription()));
+                search.setScore(responseFrag.getDouble(fieldsData.getRating()));
+
+                JSONArray genres = responseFrag.getJSONArray(fieldsData.getGenres());
+                for (int j = 0; j < genres.length(); j++) {
+                    search.addGenre(getGenreName(genres.getLong(j)));
+                }
+
+                JSONArray platforms = responseFrag.getJSONArray(fieldsData.getPlatforms());
+                for (int j = 0; j < platforms.length(); j++) {
+                    search.addPlatform(getPlatformName(platforms.getLong(j)));
+                }
+
+                //Add search result
+                games.add(search);
+
+            } catch(Exception e) {}
 
         }
 
-        return searches;
+        return games;
 
     }
 
@@ -146,31 +265,14 @@ public class IGDBClient extends HttpClient {
             sb.append(getFilterParam(fields.getRating(), GREATER_E_OP, String.valueOf(filter.getRating())));
         }
 
-        //Check time
-        if(filter.getTime() > 0) {
+        //Check age
+        /*String pegi = getArrayFilter(IGDBPegi.getPegiFromAge(filter.getAge()), PEGI_OPTION);
+        if(pegi.length() > 0) {
             if(sb.length() > 0) {
                 sb.append("&");
             }
-            sb.append(getFilterParam(fields.getTime(), GREATER_E_OP, String.valueOf(filter.getTime())));
-        }
-
-
-        //Check age
-        String pegi = getArrayFilter(IGDBPegi.getPegiFromAge(filter.getAge()), PEGI_OPTION);
-        if(pegi.length() > 0) {
             sb.append(getFilterParam(fields.getPegi(), IN_ARRAY_OR_OP, pegi));
-        }
-
-        //Check max games
-        if(sb.length() > 0) {
-            sb.append("&");
-        }
-        sb.append(LIMIT_PARAM).append("=");
-        if(filter.getMaxGames() > 0) {
-            sb.append(filter.getMaxGames());
-        } else {
-            sb.append(MAX_GAMES);
-        }
+        }*/
 
         //Check cameras
         String cameras = getArrayFilter(filter.getCameras(), CAMERA_OPTION);
@@ -215,6 +317,17 @@ public class IGDBClient extends HttpClient {
                 sb.append("&");
             }
             sb.append(getFilterParam(fields.getKeywords(), IN_ARRAY_OR_OP, keywords));
+        }
+
+        //Check max games
+        if(sb.length() > 0) {
+            sb.append("&");
+        }
+        sb.append(LIMIT_PARAM).append("=");
+        if(filter.getMaxGames() > 0) {
+            sb.append(filter.getMaxGames());
+        } else {
+            sb.append(MAX_GAMES);
         }
 
         return sb.toString();
@@ -341,6 +454,56 @@ public class IGDBClient extends HttpClient {
 
     }
 
+    private String getGenreName(long id) throws Exception {
+        return getFieldName(id, igdbData.getGenre());
+    }
+
+    private String getPlatformName(long id) throws Exception {
+        return getFieldName(id, igdbData.getPlatform());
+    }
+
+    private String getFieldName(long id, IGDBField field) throws Exception {
+
+        //Get url
+        StringBuilder sb = new StringBuilder(igdbData.getBaseUrl());
+        sb.append(field.getUrl());
+
+        //Get fields
+        IGDBFieldData fieldsData = field.getFields();
+        ArrayList<String> fields = new ArrayList<>();
+        fields.add(fieldsData.getId());
+        fields.add(fieldsData.getName());
+
+        //Add GET params
+        sb.append(id);
+        sb.append("?").append(getFieldsParam(fields));
+
+        //Create HTTP connection
+        URL url = new URL(sb.toString());
+        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+        //Set GET request
+        con.setRequestMethod("GET");
+
+        //Set headers
+        setBasicHeaders(con);
+
+        //Get GET response
+        if(!validateResponseCode(con.getResponseCode())) {
+            throw new UserException("Invalid Response");
+        }
+
+        //Get JSON response
+        JSONArray response = getJSONArrayResponse(con);
+        if(response.length() > 0) {
+            JSONObject responseFrag = response.getJSONObject(0);
+            return responseFrag.getString(fieldsData.getName());
+        }
+
+        return "";
+
+    }
+
     private String getFilterParam(String field, String operation, String value) {
         return String.format("%s[%s][%s]=%s", FILTER_PARAM, field, operation, value);
     }
@@ -359,6 +522,11 @@ public class IGDBClient extends HttpClient {
 
         return sb.toString();
 
+    }
+
+    private void setBasicHeaders(HttpsURLConnection con) {
+        con.setRequestProperty("user-key", igdbData.getApiKey());
+        con.setRequestProperty("accept", "application/json");
     }
 
 }

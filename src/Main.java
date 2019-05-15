@@ -1,7 +1,10 @@
 import Controller.Controller;
-import Model.ChatBotData;
+import Model.UserInfo;
+import Model.chatbot.ChatBotData;
 import Model.igdb.config.IGDBData;
 import Model.JsonManager;
+import Model.igdb.search.IGDBGame;
+import Model.igdb.search.IGDBGameFilter;
 import Network.ChatBotClient;
 import Network.IGDBClient;
 import View.ChatView;
@@ -11,6 +14,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -27,10 +31,24 @@ public class Main {
             configFile = new File("data/igdb.json");
             IGDBData igdbData = new Gson().fromJson(new FileReader(configFile), IGDBData.class);
             IGDBClient igdbClient = IGDBClient.getInstance(igdbData);
+
+            //Get user data
+            configFile = new File("data/user.json");
+            UserInfo userInfo = new Gson().fromJson(new FileReader(configFile), UserInfo.class);
+
             try {
-                //JSONArray response = igdbClient.listGames();
-                //long id = igdbClient.getGameModeId("multi");
-                //System.out.println(id);
+                IGDBGameFilter filter = new IGDBGameFilter();
+                filter.setName("sekiro");
+                filter.setAge(21);
+                filter.setMaxGames(20);
+                filter.setRating(50);
+                filter.addCamera("third");
+                filter.addGameMode("single");
+                filter.addGenre("adventure");
+                filter.addKeyword("japan");
+                filter.addPlatform("ps4");
+                ArrayList<IGDBGame> games = igdbClient.getGamesFromFilter(filter);
+                System.out.println(games);
             } catch(Exception e) {
                 e.printStackTrace();
             }

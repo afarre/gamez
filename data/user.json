@@ -1,0 +1,38 @@
+{
+  "name": "Angel Farre",
+  "age": -1,
+  "consoles": [
+    "pc",
+    "ps4"
+  ],
+  "favGenres": [
+    "adventure",
+    "platform"
+  ],
+  "favGames": [
+    {
+      "id": 73,
+      "name": "Mass Effect",
+      "description": "",
+      "score": 90,
+      "genres": [
+        "shooter"
+      ],
+      "platforms": [
+        "ps4"
+      ]
+    },
+    {
+      "id": 1942,
+      "name": "The Witcher",
+      "description": "",
+      "score": 100,
+      "genres": [
+        "adventure"
+      ],
+      "platforms": [
+        "ps4"
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 package Network;
 
-import Model.ChatBotData;
-import Model.Trigger;
+import Model.chatbot.ChatBotData;
+import Model.chatbot.Trigger;
 import Util.UserException;
 import org.json.JSONObject;
 

@@ -6,7 +6,6 @@ public class IGDBGameFilter {
 
     private String name;
     private double rating;
-    private long time;
     private int age;
     private int maxGames;
     private ArrayList<String> cameras;
@@ -17,7 +16,6 @@ public class IGDBGameFilter {
 
     public IGDBGameFilter(){
         rating = -1;
-        time = -1;
         age = -1;
         maxGames = -1;
         cameras = new ArrayList<>();
@@ -41,14 +39,6 @@ public class IGDBGameFilter {
 
     public void setRating(double rating) {
         this.rating = rating;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
     }
 
     public int getAge() {
@@ -94,6 +84,9 @@ public class IGDBGameFilter {
     public void addGenre(String genre) {
         if(!genres.contains(genre)) {
             genres.add(genre);
+        }
+        if(!keywords.contains(genre)) {
+            keywords.add(genre);
         }
     }
 
