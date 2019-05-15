@@ -1,17 +1,18 @@
 package Controller;
 
+import View.ChatView;
 import Model.JsonManager;
 import Model.UserInfo;
 import Network.ChatBotClient;
 import Util.BotResponse;
-import View.ChatView;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.*;
 
 public class Controller implements ActionListener {
 
@@ -19,15 +20,11 @@ public class Controller implements ActionListener {
     private UserInfo userInfo;
     private ChatBotClient chatBotClient;
 
-    public Controller(ChatView chatView, JsonManager jsonManager, ChatBotClient chatBotClient) {
+    public Controller(ChatView chatView, JsonManager jsonManager, ChatBotClient chatBotClient, UserInfo userInfo) {
+
         this.chatView = chatView;
         this.chatBotClient = chatBotClient;
-        try {
-            File configFile = new File("data/user.json");
-            userInfo = new Gson().fromJson(new FileReader(configFile), UserInfo.class);
-        } catch (FileNotFoundException e) {
-            System.out.println("There was an error reading the user personal data.");
-        }
+        this.userInfo = userInfo;
 
         if (userInfo == null){
             chatView.updateCenter("<html>Hello and welcome to Gamez, your gaming chatbot!" +
@@ -47,6 +44,17 @@ public class Controller implements ActionListener {
             //chatView.updateCenter("Hello and welcome to Gamez, your gaming chatbot!\nIt's nice to have you back " + userInfo.getName() + "! How have you been?", true);
         }
 
+        this.chatView.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                try(Writer writer = new FileWriter("data/user.json")) {
+                    Gson gson = new GsonBuilder().create();
+                    gson.toJson(userInfo, writer);
+                } catch(Exception e) {}
+                System.exit(0);
+            }
+        });
+
         try {
             chatBotClient.initConversation();
         } catch(Exception e) {
@@ -54,6 +62,8 @@ public class Controller implements ActionListener {
         }
 
     }
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -70,6 +80,7 @@ public class Controller implements ActionListener {
         } catch(Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private String beautify(String msg){

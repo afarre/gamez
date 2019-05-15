@@ -6,12 +6,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class ChatView extends JFrame {
+
     private JButton sendButton;
     private JTextField textField;
     private JScrollPane scrollPane;
     private Box center;
     private JPanel principal;
-
 
     private static final String SEND = "Send";
 

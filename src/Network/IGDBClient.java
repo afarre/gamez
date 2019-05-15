@@ -74,12 +74,6 @@ public class IGDBClient extends HttpClient {
         //Add GET params
         sb.append(gameId);
         sb.append("?").append(getFieldsParam(fields));
-        sb.append("?").append(LIMIT_PARAM).append("=");
-        if(limit > 0) {
-            sb.append(limit);
-        } else {
-            sb.append(MAX_GAMES);
-        }
         sb.append("&").append(ORDER_PARAM).append("=").append(POPULAR_DESC);
 
         //Create HTTP connection
@@ -102,7 +96,7 @@ public class IGDBClient extends HttpClient {
         ArrayList<IGDBGame> games = new ArrayList<>();
         if(response.length() > 0) {
             JSONArray relatedGameIds = response.getJSONObject(0).getJSONArray(fieldsData.getRelated());
-            for(int i = 0; i < relatedGameIds.length(); i++) {
+            for(int i = 0; i < Math.min(relatedGameIds.length(), limit); i++) {
                 IGDBGame game = getGameFromId(relatedGameIds.getLong(i));
                 if(game != null) {
                     games.add(game);

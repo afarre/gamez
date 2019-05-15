@@ -14,7 +14,7 @@
       "genres": "genres",
       "platforms": "platforms",
       "pegi": "age_ratings",
-      "related": "games"
+      "related": "similar_games"
     }
   },
   "platform": {

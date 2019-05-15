@@ -37,7 +37,7 @@ public class Main {
             UserInfo userInfo = new Gson().fromJson(new FileReader(configFile), UserInfo.class);
 
             try {
-                IGDBGameFilter filter = new IGDBGameFilter();
+                /*IGDBGameFilter filter = new IGDBGameFilter();
                 filter.setName("sekiro");
                 filter.setAge(21);
                 filter.setMaxGames(20);
@@ -47,7 +47,8 @@ public class Main {
                 filter.addGenre("adventure");
                 filter.addKeyword("japan");
                 filter.addPlatform("ps4");
-                ArrayList<IGDBGame> games = igdbClient.getGamesFromFilter(filter);
+                ArrayList<IGDBGame> games = igdbClient.getGamesFromFilter(filter);*/
+                ArrayList<IGDBGame> games = igdbClient.getRelatedGames(userInfo.getFavGames().get(0).getId(), 5);
                 System.out.println(games);
             } catch(Exception e) {
                 e.printStackTrace();
@@ -55,7 +56,7 @@ public class Main {
 
             SwingUtilities.invokeLater(() -> {
                 ChatView chatView = new ChatView();
-                Controller chatController = new Controller(chatView, new JsonManager(), chatBotClient);
+                Controller chatController = new Controller(chatView, new JsonManager(), chatBotClient, userInfo);
                 chatView.registerListeners(chatController);
             });
 
