@@ -1,3 +1,53 @@
 {
-  "apiKey": "7e9ee240b359d9740df21986fdb56843"
+  "apiKey": "7e9ee240b359d9740df21986fdb56843",
+  "baseUrl": "https://api-v3.igdb.com/",
+  "platform": {
+    "url": "platforms/",
+    "fields": {
+      "id": "id",
+      "name": "slug",
+      "games" : "games"
+    }
+  },
+  "game": {
+    "url": "games/",
+    "fields": {
+      "id": "id",
+      "name": "slug",
+      "rating": "total_rating",
+      "description": "summary",
+      "time": "time_to_beat.normally",
+      "cameras": "player_perspectives",
+      "gameModes": "game_modes",
+      "keywords": "keywords",
+      "genres": "genres",
+      "platforms": "platforms",
+      "pegi": "pegi",
+      "related": "games"
+    }
+  },
+  "genre": {
+    "url": "genres/",
+    "fields": {
+      "id": "id",
+      "name": "slug",
+      "games": "games"
+    }
+  },
+  "camera": {
+    "url": "player_perspectives/",
+    "fields": {
+      "id": "id",
+      "name": "slug",
+      "games": "games"
+    }
+  },
+  "gameMode": {
+    "url": "game_modes/",
+    "fields": {
+      "id": "id",
+      "name": "slug",
+      "games": "games"
+    }
+  }
 }

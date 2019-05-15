@@ -1,14 +1,11 @@
 import Controller.Controller;
 import Model.ChatBotData;
-import Model.IGDBData;
+import Model.igdb.config.IGDBData;
 import Model.JsonManager;
 import Network.ChatBotClient;
 import Network.IGDBClient;
 import View.ChatView;
 import com.google.gson.Gson;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.swing.*;
 import java.io.File;
@@ -31,8 +28,9 @@ public class Main {
             IGDBData igdbData = new Gson().fromJson(new FileReader(configFile), IGDBData.class);
             IGDBClient igdbClient = IGDBClient.getInstance(igdbData);
             try {
-                JSONArray response = igdbClient.listGames();
-                System.out.println(response.toString());
+                //JSONArray response = igdbClient.listGames();
+                //long id = igdbClient.getGameModeId("multi");
+                //System.out.println(id);
             } catch(Exception e) {
                 e.printStackTrace();
             }
