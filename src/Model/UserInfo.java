@@ -1,6 +1,7 @@
 package Model;
 
 import Model.igdb.search.IGDBGame;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
