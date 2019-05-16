@@ -49,7 +49,21 @@ public class BotResponse {
             if(action.equals("quit_action")) {
                 //TODO: Quit
             } else if(action.equals("confirm_form")) {
-                messages.addAll(makeGamesMsg(igdbClient.getGamesFromFilter(makeFilter())));
+
+                //Check games
+                ArrayList<IGDBGame> gamesFound = igdbClient.getGamesFromFilter(makeFilter());
+                if(gamesFound.size() == 0) {
+                    messages.add("No games were found, sorry...");
+                } else {
+                    messages.add("The next games were found...");
+                }
+
+                //Show games
+                for(IGDBGame game : gamesFound) {
+                    userInfo.addFavGames(game);
+                    messages.add(makeGamesMsg(game));
+                }
+
             }
 
             //Get bot message
@@ -118,20 +132,13 @@ public class BotResponse {
 
     }
 
-    private ArrayList<String> makeGamesMsg(ArrayList<IGDBGame> games) {
+    private String makeGamesMsg(IGDBGame game) {
 
-        ArrayList<String> msgs = new ArrayList<>();
-        for(IGDBGame game : games) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(game.getName());
-            msgs.add(sb.toString());
-        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("> ");
+        sb.append(game.getName());
 
-        if(msgs.size() == 0) {
-            msgs.add("No games where found");
-        }
-
-        return msgs;
+        return sb.toString();
 
     }
 
