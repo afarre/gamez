@@ -81,6 +81,13 @@ public class Controller implements ActionListener {
     private void getBotAnswer(String msg) {
         try {
             showMessages(response.getBotFulfilment(chatBotClient.sendMsg(msg)));
+            if(response.hasExit()) {
+                try(Writer writer = new FileWriter("data/user.json")) {
+                    Gson gson = new GsonBuilder().create();
+                    gson.toJson(userInfo, writer);
+                } catch(Exception e) {}
+                System.exit(0);
+            }
         } catch(Exception e) {
             //e.printStackTrace();
         }

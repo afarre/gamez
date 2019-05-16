@@ -97,9 +97,13 @@ public class IGDBClient extends HttpClient {
         if(response.length() > 0) {
             JSONArray relatedGameIds = response.getJSONObject(0).getJSONArray(fieldsData.getRelated());
             for(int i = 0; i < Math.min(relatedGameIds.length(), limit); i++) {
-                IGDBGame game = getGameFromId(relatedGameIds.getLong(i));
-                if(game != null) {
-                    games.add(game);
+                try {
+                    IGDBGame game = getGameFromId(relatedGameIds.getLong(i));
+                    if (game != null) {
+                        games.add(game);
+                    }
+                } catch(Exception e) {
+                    //Error adding game
                 }
             }
         }
@@ -123,7 +127,7 @@ public class IGDBClient extends HttpClient {
         fields.add(fieldsData.getId());
         fields.add(fieldsData.getName());
         fields.add(fieldsData.getDescription());
-        fields.add(fieldsData.getRating());
+        //fields.add(fieldsData.getRating());
         fields.add(fieldsData.getGenres());
         fields.add(fieldsData.getPlatforms());
 
@@ -171,7 +175,7 @@ public class IGDBClient extends HttpClient {
         fields.add(fieldsData.getId());
         fields.add(fieldsData.getName());
         fields.add(fieldsData.getDescription());
-        fields.add(fieldsData.getPegi());
+        //fields.add(fieldsData.getPegi());
         //fields.add(fieldsData.getRating());
         fields.add(fieldsData.getGenres());
         fields.add(fieldsData.getPlatforms());
