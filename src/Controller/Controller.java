@@ -33,7 +33,7 @@ public class Controller implements ActionListener {
         this.chatBotClient = chatBotClient;
         this.igdbClient = igdbClient;
         this.userInfo = userInfo;
-        response = new BotResponse();
+        response = new BotResponse(userInfo, igdbClient);
 
         //Set window close event
         this.chatView.addWindowListener(new WindowAdapter() {
@@ -82,7 +82,7 @@ public class Controller implements ActionListener {
         try {
             showMessages(response.getBotFulfilment(chatBotClient.sendMsg(msg)));
         } catch(Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 

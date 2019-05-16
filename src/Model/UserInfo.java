@@ -1,7 +1,6 @@
 package Model;
 
 import Model.igdb.search.IGDBGame;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
@@ -14,6 +13,8 @@ public class UserInfo {
     private ArrayList<IGDBGame> favGames;
 
     public UserInfo(){
+        name = "";
+        age = -1;
         consoles = new ArrayList<>();
         favGenres = new ArrayList<>();
         favGames = new ArrayList<>();

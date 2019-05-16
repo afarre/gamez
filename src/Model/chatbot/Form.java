@@ -1,10 +1,11 @@
-package Model;
+package Model.chatbot;
 
 public class Form {
+
     private String console;
     private String genre;
     private String camera;
-    private int numPlayers;
+    private String numPlayers;
     private double rating;
     private int numRecommendations;
 
@@ -34,11 +35,11 @@ public class Form {
         this.camera = camera;
     }
 
-    public int getNumPlayers() {
+    public String getNumPlayers() {
         return numPlayers;
     }
 
-    public void setNumPlayers(int numPlayers) {
+    public void setNumPlayers(String numPlayers) {
         this.numPlayers = numPlayers;
     }
 
@@ -57,4 +58,5 @@ public class Form {
     public void setNumRecommendations(int numRecommendations) {
         this.numRecommendations = numRecommendations;
     }
+
 }

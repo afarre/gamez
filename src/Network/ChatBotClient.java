@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -133,7 +132,7 @@ public class ChatBotClient extends HttpClient {
             object.put(entry.getKey(), entry.getValue());
         }
 
-        return object.toString();
+        return object.length() == 0 ? "" : object.toString();
 
     }
 

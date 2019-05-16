@@ -172,7 +172,7 @@ public class IGDBClient extends HttpClient {
         fields.add(fieldsData.getName());
         fields.add(fieldsData.getDescription());
         fields.add(fieldsData.getPegi());
-        fields.add(fieldsData.getRating());
+        //fields.add(fieldsData.getRating());
         fields.add(fieldsData.getGenres());
         fields.add(fieldsData.getPlatforms());
 
@@ -219,7 +219,7 @@ public class IGDBClient extends HttpClient {
                 search.setId(responseFrag.getLong(fieldsData.getId()));
                 search.setName(responseFrag.getString(fieldsData.getName()));
                 search.setDescription(responseFrag.getString(fieldsData.getDescription()));
-                search.setScore(responseFrag.getDouble(fieldsData.getRating()));
+                //search.setScore(responseFrag.getDouble(fieldsData.getRating()));
 
                 JSONArray genres = responseFrag.getJSONArray(fieldsData.getGenres());
                 for (int j = 0; j < genres.length(); j++) {
@@ -252,12 +252,12 @@ public class IGDBClient extends HttpClient {
         }
 
         //Check rating
-        if(filter.getRating() > 0) {
+        /*if(filter.getRating() > 0) {
             if(sb.length() > 0) {
                 sb.append("&");
             }
             sb.append(getFilterParam(fields.getRating(), GREATER_E_OP, String.valueOf(filter.getRating())));
-        }
+        }*/
 
         //Check age
         /*String pegi = getArrayFilter(IGDBPegi.getPegiFromAge(filter.getAge()), PEGI_OPTION);
