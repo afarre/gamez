@@ -1,1 +1,7 @@
-{"name":"Manolo","age":23,"consoles":["pc","ps4"],"favGenres":[],"favGames":[]}
+{
+  "name": "Manolo",
+  "age": 16,
+  "consoles": [],
+  "favGenres": [],
+  "favGames": []
+}

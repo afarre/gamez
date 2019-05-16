@@ -2,20 +2,12 @@ package Util;
 
 import Model.chatbot.Form;
 import Model.UserInfo;
-import Model.igdb.config.IGDBField;
 import Model.igdb.search.IGDBGame;
 import Model.igdb.search.IGDBGameFilter;
 import Network.IGDBClient;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -71,28 +63,24 @@ public class BotResponse {
                         } catch (NumberFormatException e) {
                             form.setNumPlayers("multiplayer");
                         }
-                    } else {
-                        form.setNumPlayers("multiplayer");
                     }
                 } else if (key.equals("rating")) {
                     if (!params.isNull(key)) {
                         try {
-                            form.setRating(Double.valueOf(params.getString(key)));
+                            double value = Double.valueOf(params.getString(key));
+                            form.setRating(value >= 0 && value <= 100 ? value : -1);
                         } catch (NumberFormatException e) {
-                            form.setRating(0);
+                            form.setRating(-1);
                         }
-                    } else {
-                        form.setRating(0);
                     }
                 } else if (key.equals("numRecommendations")) {
                     if (!params.isNull(key)) {
                         try {
-                            form.setNumRecommendations(Integer.valueOf(params.getString(key)));
+                            int value = Integer.valueOf(params.getString(key));
+                            form.setNumRecommendations(value > 0 ? value : -1);
                         } catch (NumberFormatException e) {
                             form.setNumRecommendations(5);
                         }
-                    } else {
-                        form.setNumRecommendations(-1);
                     }
                 } else if (key.equals("preferences")) {
 
