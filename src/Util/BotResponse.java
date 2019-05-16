@@ -40,6 +40,7 @@ public class BotResponse {
     public ArrayList<String> getBotFulfilment(JSONObject msg) throws Exception {
 
         ArrayList<String> messages = new ArrayList<>();
+        boolean msgOn = true;
 
         //Get fulfilment
         JSONArray responses = (JSONArray) msg.getJSONObject("result").get("fulfillment");
@@ -109,6 +110,7 @@ public class BotResponse {
                     //Check games
                     if (gamesFound.size() == 0) {
                         messages.add("No games were found from your preferences, sorry...");
+                        msgOn = false;
                     } else {
                         messages.add("I suggest you next games...");
                     }
@@ -126,6 +128,10 @@ public class BotResponse {
         }
 
         //Get text messages
+        if(!msgOn) {
+            return messages;
+        }
+
         for(int i = 0; i < responses.length(); i++) {
 
             JSONObject obj = responses.getJSONObject(i);
